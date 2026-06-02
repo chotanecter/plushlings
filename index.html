@@ -65,6 +65,21 @@
   .hero-grid,.cta-grid{grid-template-columns:1fr}
   .hero-media{order:-1}
 }
+
+/* ---- hero Gemini generator ---- */
+#heroUpload{cursor:pointer}
+#heroUpload.drag{box-shadow:var(--shadow),inset 0 0 0 2px var(--accent)}
+.up-hint{pointer-events:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;z-index:2;background:var(--surface)}
+.up-hint .dzic{width:54px;height:54px;border-radius:16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--accent-glow)}
+.up-hint .dzic svg{width:26px;height:26px}
+.up-hint b{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--ink)}
+.up-hint span{font-size:13px;color:var(--ink-soft)}
+.gen-status{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px;background:rgba(255,255,255,.92);color:var(--ink-soft);font-size:13px;line-height:1.5;z-index:3}
+.gen-status[data-state="error"]{color:#b3261e}
+.gen-status small{color:var(--ink-faint)}
+.spinner{width:34px;height:34px;border-radius:50%;border:3px solid var(--surface);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.link-btn{background:none;border:none;color:var(--accent);font-weight:700;cursor:pointer;text-decoration:underline;font-size:13px;padding:0;margin-left:4px}
 </style>
 </head>
 <body>
@@ -119,8 +134,19 @@
     </div>
 
     <div class="hero-media rise">
-      <div class="hero-frame">
-        <image-slot id="hero-main" placeholder="Drop a hero plushie photo" fit="cover"></image-slot>
+      <div class="hero-frame" id="heroUpload">
+        <input type="file" id="heroFile" accept="image/png,image/jpeg,image/webp" hidden>
+        <img id="heroOut" alt="Your plush keychain preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff">
+        <div class="up-hint" id="heroHint">
+          <div class="dzic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg></div>
+          <b>Drop your photo</b>
+          <span>see it as a plush keychain</span>
+        </div>
+        <div id="heroStatus" class="gen-status" style="display:none"></div>
+        <button id="heroRegen" class="btn btn--ghost btn--sm" type="button" style="display:none;position:absolute;bottom:12px;right:12px;height:34px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9a8.5 8.5 0 1 1 .5 6"/><path d="M3 4v5h5"/></svg>
+          Regenerate
+        </button>
       </div>
       <div class="hero-chip-photo">
         <span class="mono">Your photo</span>
@@ -317,6 +343,7 @@
 
 <script src="image-slot.js"></script>
 <script src="app.js"></script>
+<script src="plushie-generate.js"></script>
 <script>
 /* featured products */
 (function(){
