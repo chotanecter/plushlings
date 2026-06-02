@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — plushlings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.crumb{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-faint);padding-top:clamp(20px,3vw,30px)}
+.crumb a:hover{color:var(--ink)}
+.crumb svg{width:13px;height:13px}
+
+.pdp{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,56px);align-items:start;padding-top:clamp(20px,3vw,28px);padding-bottom:clamp(48px,6vw,80px)}
+.gallery{display:flex;flex-direction:column;gap:14px;position:sticky;top:90px}
+.gal-main{border-radius:24px;overflow:hidden;aspect-ratio:1/1;box-shadow:inset 0 0 0 1px var(--line)}
+.gal-main image-slot{width:100%;height:100%;box-shadow:none}
+.gal-thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal-thumbs image-slot{width:100%;aspect-ratio:1/1;border-radius:14px}
+
+.pinfo{display:flex;flex-direction:column;gap:22px;min-width:0}
+.pinfo .h1{font-size:clamp(30px,3.8vw,44px)}
+.price-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.price-row .price{font-family:var(--display);font-weight:700;font-size:clamp(26px,3vw,34px);letter-spacing:-.03em}
+.size-pill{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;border-radius:7px;background:var(--accent-tint);color:var(--accent)}
+.rate{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft)}
+.rate .stars{color:var(--accent)}
+.rate .stars svg{width:14px;height:14px}
+.pinfo .blurb{font-size:16px;color:var(--ink-soft);line-height:1.55}
+
+.opt-block{display:flex;flex-direction:column;gap:12px}
+.opt-block .label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:8px}
+.opt-block .label .pick{color:var(--ink);text-transform:none;letter-spacing:0;font-family:var(--body);font-weight:700;margin-left:auto;font-size:13px}
+
+.buy-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding-top:4px}
+.buy-row .btn--primary{flex:1;min-width:200px}
+
+.assure{display:flex;flex-direction:column;gap:12px;padding-top:6px}
+.assure .a{display:flex;align-items:center;gap:11px;font-size:14px;color:var(--ink-soft)}
+.assure .a svg{width:18px;height:18px;color:var(--accent);flex:none}
+.assure .a b{color:var(--ink);font-weight:700}
+
+.swap{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.swap .si{width:42px;height:42px;border-radius:12px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+.swap .si svg{width:20px;height:20px}
+.swap b{font-size:14px;display:block;letter-spacing:-.01em}
+.swap span{font-size:13px;color:var(--ink-soft)}
+.swap a{margin-left:auto;flex:none}
+
+.acc{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.acc details{border-bottom:1px solid var(--line)}
+.acc summary{list-style:none;cursor:pointer;padding:18px 0;display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:15px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary .ai{width:26px;height:26px;border-radius:999px;background:var(--surface);display:flex;align-items:center;justify-content:center;transition:transform .25s var(--ease)}
+.acc summary .ai svg{width:14px;height:14px}
+.acc details[open] summary .ai{transform:rotate(45deg)}
+.acc .acc-body{padding-bottom:18px;font-size:14px;color:var(--ink-soft);line-height:1.6;max-width:60ch}
+
+.related{padding-bottom:clamp(48px,7vw,88px)}
+@media (max-width:880px){
+  .pdp{grid-template-columns:1fr}
+  .gallery{position:static}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-head">
+  <div class="bar">
+    <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+    <nav class="nav">
+      <a href="shop.html">Shop</a>
+      <a href="custom.html">Custom</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#reviews">Reviews</a>
+    </nav>
+    <div class="head-actions">
+      <a class="btn btn--primary btn--sm" href="custom.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+        Make your plushie
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+        <span class="cart-count" data-empty="true">0</span>
+      </a>
+      <button class="icon-btn menu-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <nav class="crumb">
+      <a href="shop.html">Shop</a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      <a href="shop.html" id="crumbCat">Collection</a>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      <span style="color:var(--ink)" id="crumbName">Product</span>
+    </nav>
+
+    <div class="pdp">
+      <!-- GALLERY -->
+      <div class="gallery rise">
+        <div class="gal-main">
+          <image-slot id="pdp-main" placeholder="Drop main product photo"></image-slot>
+        </div>
+        <div class="gal-thumbs">
+          <image-slot id="pdp-t1" placeholder=" "></image-slot>
+          <image-slot id="pdp-t2" placeholder=" "></image-slot>
+          <image-slot id="pdp-t3" placeholder=" "></image-slot>
+          <image-slot id="pdp-t4" placeholder=" "></image-slot>
+        </div>
+      </div>
+
+      <!-- INFO -->
+      <div class="pinfo">
+        <div class="stack gap-12 rise">
+          <span class="kicker" id="pKicker">Collection</span>
+          <h1 class="h1" id="pName">Product</h1>
+          <div class="price-row">
+            <span class="price" id="pPrice">$39</span>
+            <span class="size-pill">6&quot; pocket plush</span>
+            <span class="rate">
+              <span class="stars">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+              </span>
+              4.9 · 2,140 reviews
+            </span>
+          </div>
+        </div>
+        <p class="blurb rise" id="pBlurb">Blurb</p>
+
+        <div class="opt-block rise">
+          <div class="label">Fabric <span class="pick" id="sizePick">Minky fleece</span></div>
+          <div class="optgrid optgrid--3" id="sizeOpts"></div>
+        </div>
+
+        <div class="opt-block rise">
+          <div class="label">Add-on <span class="pick" id="basePick">None</span></div>
+          <div class="optgrid optgrid--auto" id="baseOpts"></div>
+        </div>
+
+        <div class="field rise">
+          <label for="pEngrave">Add an embroidered name <span style="text-transform:none;letter-spacing:0;color:var(--ink-faint)">— optional, +$8</span></label>
+          <input class="input" id="pEngrave" placeholder="A name, a date, an inside joke" maxlength="22">
+        </div>
+
+        <div class="buy-row rise">
+          <div class="stepper">
+            <button id="qMinus" aria-label="Decrease"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+            <span class="qv" id="qVal">1</span>
+            <button id="qPlus" aria-label="Increase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+          </div>
+          <button class="btn btn--primary btn--lg" id="addBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+            Add to cart · <span id="addTotal">$39</span>
+          </button>
+        </div>
+
+        <div class="assure rise">
+          <div class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg><span><b>Free photo proof</b> before we sew a thing</span></div>
+          <div class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><span><b>14-day turnaround</b>, ships worldwide</span></div>
+          <div class="a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9a8.5 8.5 0 1 1 .5 6"/><path d="M3 4v5h5"/></svg><span><b>Not them? We re-stitch</b> for free</span></div>
+        </div>
+
+        <div class="swap rise">
+          <div class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2.5"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.2-2h5.6L16 6"/></svg></div>
+          <div><b>Want this as someone you know?</b><span>Start from this style and upload their face.</span></div>
+          <a class="btn btn--ghost btn--sm" href="custom.html">Customize</a>
+        </div>
+
+        <div class="acc rise">
+          <details open>
+            <summary>The details <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+            <div class="acc-body">Hand-patterned from plush minky fabric, machine-embroidered features, and soft polyfill stuffing for a satisfying squish. Roughly 6&quot; tall. Each one is made to order — no two are identical. Surface-washable.</div>
+          </details>
+          <details>
+            <summary>Shipping &amp; turnaround <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+            <div class="acc-body">Sewing takes about 14 days, plus shipping. You'll approve a photo proof first. Rush (7-day) is available at checkout. We ship worldwide in a protective window-box.</div>
+          </details>
+          <details>
+            <summary>Care &amp; returns <span class="ai"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></summary>
+            <div class="acc-body">Spot-clean with a damp cloth; air dry. Keep out of direct sun. Because each piece is custom, we don't take returns on likeness — but if it doesn't look like them, we'll re-stitch it free.</div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <section class="related" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:24px">
+        <span class="kicker rise">More to squish</span>
+        <h2 class="h2 rise">You might also hug these.</h2>
+      </div>
+      <div class="pgrid" id="related"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand stack gap-16">
+        <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+        <p class="muted" style="color:rgba(255,255,255,.6)">Hand-sewn plushies from a single photo. Made by humans, shipped to squish.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Shop</h4><a href="shop.html">All plushies</a><a href="custom.html">Custom order</a><a href="shop.html">Bestsellers</a></div>
+        <div class="foot-col"><h4>Company</h4><a href="index.html#how">How it works</a><a href="index.html#reviews">Reviews</a><a href="index.html">Our studio</a></div>
+        <div class="foot-col"><h4>Help</h4><a href="index.html">Photo tips</a><a href="index.html">Shipping</a><a href="index.html">Returns</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 plushlings — every plushie made to be squeezed</span>
+      <span>Made by hand · Shipped worldwide</span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="app.js"></script>
+<script src="product.js"></script>
+</body>
+</html>
