@@ -1,126 +1,64 @@
 /* =========================================================================
-   custom.js — plushie builder flow (plushlings)
-   Same engine as the storefront. Every plushie is a fixed 6"; the old
-   "size" group is reused for Fabric, "pose" for Expression, "base" for
-   Accessory.
+   custom.js — plush keychain builder (plushlings)
+   Two steps: 01 Photo (Gemini preview) → 02 Review (order quantity).
+   Pricing: 1 piece = $100 sample fee; bulk = $4.50 / piece (default 500).
    ========================================================================= */
 (function(){
-  const BASE=36;
-  const OPT={
-    people:[
-      {id:1,name:"Just one",sub:"1 plushie",delta:0},
-      {id:2,name:"A duo",sub:"2 plushies",delta:33},
-      {id:3,name:"The trio",sub:"3 plushies",delta:66},
-    ],
-    size:[ /* fabric — all 6" */
-      {id:"minky", name:"Minky fleece",sub:"Velvety soft",  delta:0},
-      {id:"cotton",name:"Soft cotton", sub:"Breathable",    delta:0},
-      {id:"sherpa",name:"Fuzzy sherpa",sub:"Extra fluffy",  delta:4},
-    ],
-    style:[
-      {id:"everyday",name:"Everyday",sub:"As they dress",delta:0},
-      {id:"formal",name:"Formal / Suit",sub:"Dressed up",delta:0},
-      {id:"pro",name:"Work / Pro",sub:"On the clock",delta:0},
-      {id:"athlete",name:"Athlete",sub:"Game day kit",delta:6},
-      {id:"hero",name:"Superhero",sub:"Cape included",delta:8},
-      {id:"holiday",name:"Holiday",sub:"Seasonal fit",delta:6},
-    ],
-    pose:[ /* expression */
-      {id:"smiley",name:"Smiley",delta:0},
-      {id:"sleepy",name:"Sleepy",delta:0},
-      {id:"surprised",name:"Surprised",delta:0},
-      {id:"derpy",name:"Derpy",delta:0},
-    ],
-    base:[ /* accessory */
-      {id:"none",name:"None",delta:0},
-      {id:"bow",name:"Bow",delta:4},
-      {id:"scarf",name:"Scarf",delta:5},
-      {id:"hat",name:"Tiny hat",delta:6},
-    ],
-    addons:[
-      {id:"engrave",name:"Embroidered name",sub:"On a tag",delta:8},
-      {id:"giftbox",name:"Gift box",sub:"Ready to give",delta:6},
-      {id:"rush",name:"Rush — 7 days",sub:"Skip the queue",delta:20},
-    ],
-  };
-  const LABELS={people:"People",size:"Fabric",style:"Style",pose:"Expression",base:"Accessory"};
+  const UNIT=4.5;          // per-piece bulk price
+  const SAMPLE=100;        // flat fee for a single sample
+  const QTY_OPTIONS=[
+    {qty:1,    name:"1 — Sample",    sub:"Quality check",  sample:true},
+    {qty:250,  name:"250 pieces",   sub:"$4.50 / piece"},
+    {qty:500,  name:"500 pieces",   sub:"$4.50 / piece",  popular:true},
+    {qty:1000, name:"1,000 pieces", sub:"$4.50 / piece"},
+    {qty:2500, name:"2,500 pieces", sub:"$4.50 / piece"},
+  ];
 
-  const state={people:1,size:"minky",style:"everyday",pose:"smiley",base:"none",addons:[],engrave:"",occasion:"",notes:""};
+  const state={ qty:500 };   // default 500 pieces
   let step=0;
-  const TOTAL=4;
+  const TOTAL=2;
 
   const $=s=>document.querySelector(s);
   const $$=s=>[...document.querySelectorAll(s)];
 
-  function find(group,id){ return OPT[group].find(o=>String(o.id)===String(id)); }
-  function deltaStr(d){ return d===0?"Included":(d>0?"+$"+d:"−$"+Math.abs(d)); }
+  const fmt=n=>"$"+Number(n).toLocaleString("en-US");
+  function price(){ return state.qty===1 ? SAMPLE : state.qty*UNIT; }
+  function unitLabel(){ return state.qty===1 ? "Sample fee" : "$4.50 / piece"; }
+  function qtyLabel(){ return state.qty===1 ? "1 piece (sample)" : state.qty.toLocaleString("en-US")+" pieces"; }
 
-  /* ---- render option groups ---- */
-  function renderGroups(){
-    $$("[data-group]").forEach(grid=>{
-      const g=grid.dataset.group;
-      const multi=grid.dataset.multi==="1";
-      grid.innerHTML="";
-      OPT[g].forEach(o=>{
-        const sel = multi ? state.addons.includes(o.id) : String(state[g])===String(o.id);
-        const b=document.createElement("button");
-        b.className="opt";
-        b.type="button";
-        b.setAttribute("aria-pressed",sel?"true":"false");
-        b.innerHTML=`
-          <span class="opt-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span>
-          <span class="opt-name">${o.name}</span>
-          ${o.sub?`<span class="opt-sub">${o.sub}</span>`:""}
-          <span class="opt-delta">${deltaStr(o.delta)}</span>`;
-        b.addEventListener("click",()=>{
-          if(multi){
-            state.addons=state.addons.includes(o.id)?state.addons.filter(x=>x!==o.id):[...state.addons,o.id];
-          }else{
-            state[g]=o.id;
-          }
-          renderGroups(); renderSummary();
-        });
-        grid.appendChild(b);
-      });
+  /* ---- quantity tiles ---- */
+  function renderQty(){
+    const grid=$("#qtyGrid");
+    if(!grid)return;
+    grid.innerHTML="";
+    QTY_OPTIONS.forEach(o=>{
+      const sel=state.qty===o.qty;
+      const total=o.qty===1?SAMPLE:o.qty*UNIT;
+      const b=document.createElement("button");
+      b.className="opt"; b.type="button";
+      b.setAttribute("aria-pressed",sel?"true":"false");
+      b.innerHTML=`
+        <span class="opt-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span>
+        <span class="opt-name">${o.name}${o.popular?' <span class="tag" style="margin-left:4px">Popular</span>':''}</span>
+        <span class="opt-sub">${o.sub}</span>
+        <span class="opt-delta">${o.sample?"Sample fee · "+fmt(total):fmt(total)}</span>`;
+      b.addEventListener("click",()=>{ state.qty=o.qty; renderQty(); renderSummary(); });
+      grid.appendChild(b);
     });
   }
 
-  /* ---- price ---- */
-  function price(){
-    let p=BASE;
-    p+=find("people",state.people).delta;
-    p+=find("size",state.size).delta;
-    p+=find("style",state.style).delta;
-    p+=find("base",state.base).delta;
-    state.addons.forEach(a=>{ const o=OPT.addons.find(x=>x.id===a); if(o)p+=o.delta; });
-    return p;
-  }
-
-  /* ---- summary ---- */
-  function summaryRows(){
-    const rows=[
-      ["People",find("people",state.people).name],
-      ["Fabric",find("size",state.size).name+' · 6"'],
-      ["Style",find("style",state.style).name],
-      ["Expression",find("pose",state.pose).name],
-      ["Accessory",find("base",state.base).name],
-    ];
-    if(state.addons.length) rows.push(["Extras",state.addons.map(a=>OPT.addons.find(x=>x.id===a).name).join(", ")]);
-    if(state.engrave) rows.push(["Embroidery","“"+state.engrave+"”"]);
-    if(state.occasion) rows.push(["Occasion",state.occasion]);
-    return rows;
-  }
+  /* ---- sticky summary ---- */
   function renderSummary(){
+    const rows=[
+      ["Item","Plush keychain"],
+      ["Quantity",qtyLabel()],
+      ["Price",unitLabel()],
+    ];
     const list=$("#sumList");
-    list.innerHTML=summaryRows().map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
-    $("#sumTotal").textContent=money(price());
-    $("#addPrice").textContent=money(price());
-  }
-  function renderReview(){
-    const rows=summaryRows();
-    rows.push(["Proof","Free · within 48h"]);
-    $("#reviewList").innerHTML=rows.map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("")
-      +`<div class="sum-row" style="padding-top:12px;border-top:1px solid var(--line);margin-top:4px"><span class="k">Total</span><span class="v" style="font-family:var(--display);font-size:18px">${money(price())}</span></div>`;
+    if(list) list.innerHTML=rows.map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
+    const t=fmt(price());
+    if($("#sumTotal")) $("#sumTotal").textContent=t;
+    if($("#addPrice")) $("#addPrice").textContent=t;
   }
 
   /* ---- steps ---- */
@@ -132,44 +70,26 @@
       s.classList.toggle("is-active",i===step);
       s.classList.toggle("is-done",i<step);
     });
-    if(step===3) renderReview();
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
-  /* ---- photo slot fill detection ---- */
-  function watchSlot(){
-    // Upload + preview handling now lives in plushie-generate.js.
-    const slot=$("#upSlot");
-    if(!slot)return;
-    const check=()=>{
-      const img=document.querySelector("#custom-photo");
-      const filled = !!(img && img.hasAttribute("data-filled"));
-      slot.classList.toggle("filled",filled);
-    };
-    check();
-    setInterval(check,500);
-  }
-
   document.addEventListener("DOMContentLoaded",()=>{
-    renderGroups();
+    renderQty();
     renderSummary();
-    watchSlot();
 
     $$("[data-next]").forEach(b=>b.addEventListener("click",()=>go(step+1)));
     $$("[data-back]").forEach(b=>b.addEventListener("click",()=>go(step-1)));
     $$("#progress .pstep").forEach(s=>s.addEventListener("click",()=>{ if(+s.dataset.step<=step) go(+s.dataset.step); }));
 
-    $("#engraveText").addEventListener("input",e=>{ state.engrave=e.target.value.trim(); renderSummary(); });
-    $("#occasion").addEventListener("change",e=>{ state.occasion=e.target.value; renderSummary(); });
-    $("#notes").addEventListener("input",e=>{ state.notes=e.target.value; });
-
     $("#addCustom").addEventListener("click",()=>{
-      const variant=summaryRows().map(([k,v])=>v).slice(0,5).join(" · ");
+      const variant = state.qty===1
+        ? "1 piece · Sample fee"
+        : state.qty.toLocaleString("en-US")+" pieces · $4.50/ea";
       addToCart({
         id:"custom-"+Date.now(),
-        name:"Custom plushie",
+        name:"Custom plush keychain",
         variant:variant,
-        price:price(),
+        price:price(),   // total order price as a single line
         qty:1,
         custom:true,
         slot:"custom-photo",
@@ -178,13 +98,11 @@
       $$("[data-panel]").forEach(p=>p.classList.remove("is-active"));
       $("#success").classList.add("is-active");
       $$("#progress .pstep").forEach(s=>s.classList.add("is-done"));
-      toast("Added to cart — proof on the way");
+      if(typeof toast==="function") toast("Added to cart — proof on the way");
       window.scrollTo({top:0,behavior:"smooth"});
     });
 
-    $("#makeAnother").addEventListener("click",()=>{
-      $("#success").classList.remove("is-active");
-      go(0);
-    });
+    const ma=$("#makeAnother");
+    if(ma) ma.addEventListener("click",()=>{ $("#success").classList.remove("is-active"); go(0); });
   });
 })();

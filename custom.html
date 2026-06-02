@@ -146,9 +146,7 @@
       <h1 class="h1 rise">A photo, a few choices, and a lot of squish. Let's go.</h1>
       <div class="progress rise" id="progress">
         <div class="pstep is-active" data-step="0"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">01</span><span class="pl">Photo</span></div>
-        <div class="pstep" data-step="1"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">02</span><span class="pl">Build</span></div>
-        <div class="pstep" data-step="2"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">03</span><span class="pl">Details</span></div>
-        <div class="pstep" data-step="3"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">04</span><span class="pl">Review</span></div>
+        <div class="pstep" data-step="1"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">02</span><span class="pl">Review</span></div>
       </div>
     </div>
 
@@ -180,88 +178,29 @@
           </div>
           <div class="panel-nav">
             <span class="spacer"></span>
-            <button class="btn btn--primary" data-next>Continue to build
+            <button class="btn btn--primary" data-next>Continue to review
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- STEP 2: BUILD -->
+        <!-- STEP 2: REVIEW + ORDER QUANTITY -->
         <div class="panel" data-panel="1">
           <div class="fieldset">
-            <div class="label">How many?</div>
-            <div class="optgrid optgrid--3" data-group="people"></div>
+            <span class="kicker">Choose your order</span>
+            <h2 class="h3">How many plush keychains do you need?</h2>
+            <p class="muted" style="font-size:14px">Order a single sample to check quality, or go to production at bulk pricing. We'll email a photo proof before anything is sewn.</p>
           </div>
           <div class="fieldset">
-            <div class="label">Fabric <span class="opt-delta" style="font-family:var(--mono);color:var(--ink-faint)">All 6&quot; · pocket plush</span></div>
-            <div class="optgrid optgrid--3" data-group="size"></div>
-          </div>
-          <div class="fieldset">
-            <div class="label">Outfit &amp; style</div>
-            <div class="optgrid optgrid--3" data-group="style"></div>
-          </div>
-          <div class="fieldset">
-            <div class="label">Expression</div>
-            <div class="optgrid optgrid--auto" data-group="pose"></div>
-          </div>
-          <div class="fieldset">
-            <div class="label">Accessory</div>
-            <div class="optgrid optgrid--auto" data-group="base"></div>
-          </div>
-          <div class="panel-nav">
-            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
-            <span class="spacer"></span>
-            <button class="btn btn--primary" data-next>Add the details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          </div>
-        </div>
-
-        <!-- STEP 3: DETAILS -->
-        <div class="panel" data-panel="2">
-          <div class="fieldset">
-            <div class="label">Finishing touches</div>
-            <div class="optgrid optgrid--3" data-group="addons" data-multi="1"></div>
-          </div>
-          <div class="inline-2">
-            <div class="field">
-              <label for="engraveText">Embroidery / name tag</label>
-              <input class="input" id="engraveText" placeholder="e.g. World's Okayest Boss" maxlength="22">
-            </div>
-            <div class="field">
-              <label for="occasion">Occasion</label>
-              <select class="input select" id="occasion">
-                <option value="">No occasion</option>
-                <option>Birthday</option><option>Wedding / Anniversary</option><option>New baby</option>
-                <option>Office gift</option><option>Pet portrait</option><option>Just because</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="notes">Notes for the maker</label>
-            <textarea class="input" id="notes" rows="3" placeholder="Tell us anything — favorite color, that one cowlick, the vibe."></textarea>
-          </div>
-          <div class="panel-nav">
-            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
-            <span class="spacer"></span>
-            <button class="btn btn--primary" data-next>Review my plushie<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          </div>
-        </div>
-
-        <!-- STEP 4: REVIEW -->
-        <div class="panel" data-panel="3">
-          <div class="fieldset">
-            <span class="kicker">Final look</span>
-            <h2 class="h3">Here's your one-of-a-kind, before it's ever sewn.</h2>
-            <p class="muted" style="font-size:14px">We'll email a photo proof within 48 hours. Nothing gets sewn until you say it's perfect.</p>
-          </div>
-          <div class="tile" style="padding:22px;border-radius:18px">
-            <div class="sum-list" id="reviewList"></div>
+            <div class="label">Order quantity</div>
+            <div class="optgrid optgrid--3" id="qtyGrid"></div>
           </div>
           <div class="panel-nav">
             <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
             <span class="spacer"></span>
             <button class="btn btn--primary btn--lg" id="addCustom">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
-              Add to cart · <span id="addPrice">$36</span>
+              Add to cart · <span id="addPrice">$2,250</span>
             </button>
           </div>
         </div>
@@ -297,13 +236,13 @@
         </div>
         <div class="sum-body">
           <div class="sum-title">
-            <b>Custom plushie</b>
-            <span class="tag">1-of-1</span>
+            <b>Custom plush keychain</b>
+            <span class="tag">Custom</span>
           </div>
           <div class="sum-list" id="sumList"></div>
           <div class="sum-total">
             <span class="tl">Total</span>
-            <span class="tv" id="sumTotal">$36</span>
+            <span class="tv" id="sumTotal">$2,250</span>
           </div>
           <p class="sum-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Free photo proof before we sew. Free re-do if it's not them.</p>
         </div>

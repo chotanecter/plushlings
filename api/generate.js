@@ -13,8 +13,9 @@ const IMAGE_MODELS = ['gemini-2.5-flash-image', 'gemini-3.1-flash-image-preview'
 // Plushie equivalent of the bobblehead prompt — same design language
 // (cute, collectible, recognizable, clean white background), but a soft
 // stuffed toy rendered as a simple commercial product shot.
-const PLUSHIE_PROMPT = `Transform this photo into a cute, soft plushie (stuffed-toy) version of the subject. The subject may be a person OR an animal/pet. Produce a simple commercial PRODUCT SHOT. Requirements:
-- A small, huggable plush doll about 6 inches tall, in a friendly front-facing standing or sitting pose
+const PLUSHIE_PROMPT = `Transform this photo into a cute, soft plush KEYCHAIN CHARM of the subject. The subject may be a person OR an animal/pet. Produce a simple commercial PRODUCT SHOT. Requirements:
+- A small, huggable plush doll (about 4-6 inches tall) in a friendly front-facing standing or sitting pose
+- A KEYCHAIN AT THE TOP IS MANDATORY: a small silver/metal split-ring keyring attached to the very top of the plush's head by a short fabric strap or loop, so it clearly reads as a collectible plush keychain charm. The metal ring must be fully visible above the head and must never be cropped or omitted
 - Soft fabric look: minky/fleece/felt textures, visible seams and stitching, slightly fuzzy surface
 - Chibi/cute proportions: rounded soft body and a gently oversized head, like a high-quality collectible plush
 - EYES ARE CRITICAL: large, cute, clearly visible embroidered or glossy felt eyes with catchlights. Eyes are the most prominent facial feature — never omit or minimize them
@@ -22,7 +23,7 @@ const PLUSHIE_PROMPT = `Transform this photo into a cute, soft plushie (stuffed-
 - For people: keep clothing, hairstyle, hair color, and skin tone recognizable but rendered as plush fabric and yarn hair
 - For animals/pets: keep the breed, fur color, and distinctive markings recognizable, rendered as soft plush fur
 - Clean pure white studio background, soft even lighting, subtle natural contact shadow under the plush
-- Full body visible, centered, like a catalog/e-commerce product photo
+- Full body visible and centered, including the keychain ring at the top, like a catalog/e-commerce product photo
 - No text, no watermarks, no extra props, no packaging`;
 
 module.exports = async (req, res) => {
