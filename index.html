@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>plushlings — custom plushies, hand-sewn from your photo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ---- hero ---- */
+.hero{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(40px,6vw,80px)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:24px}
+.hero-copy .h1{margin-top:4px}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-top:6px}
+.hero-meta span{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.hero-meta svg{width:14px;height:14px;color:var(--accent)}
+.hero-media{position:relative}
+.hero-frame{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:5/6;box-shadow:var(--shadow)}
+.hero-frame image-slot{width:100%;height:100%;box-shadow:inset 0 0 0 1px var(--line)}
+.hero-badge{
+  position:absolute;left:-14px;bottom:26px;background:#fff;border-radius:16px;
+  box-shadow:var(--shadow);padding:14px 16px;display:flex;align-items:center;gap:12px;
+}
+.hero-badge .hb-ic{width:40px;height:40px;border-radius:11px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center}
+.hero-badge .hb-ic svg{width:20px;height:20px}
+.hero-badge b{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:-.02em;display:block}
+.hero-badge span{font-size:12px;color:var(--ink-soft)}
+.hero-chip-photo{position:absolute;top:18px;right:-12px;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:10px 14px;display:flex;flex-direction:column;gap:2px}
+.hero-chip-photo .mono{color:var(--ink-faint);font-size:10px}
+.hero-chip-photo b{font-family:var(--display);font-weight:700;letter-spacing:-.02em}
+
+/* ---- logo strip ---- */
+.strip{padding-block:0;margin-top:6px}
+.strip-inner{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center;justify-content:center;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.strip-inner .mono{color:var(--ink-faint)}
+
+/* ---- how it works ---- */
+.how-foot{margin-top:28px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+
+/* ---- dark CTA band ---- */
+.cta-band .wrap{position:relative;padding-block:clamp(56px,8vw,96px)}
+.cta-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(32px,5vw,64px);align-items:center}
+.cta-band .h2{color:#fff;max-width:16ch}
+.upload-card{background:rgba(255,255,255,.04);border-radius:24px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);padding:clamp(22px,3vw,34px);display:flex;flex-direction:column;gap:18px}
+.dropzone{
+  border-radius:16px;border:1.5px dashed rgba(255,255,255,.28);
+  padding:34px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;
+  transition:all .25s var(--ease);background:rgba(255,255,255,.02);
+}
+.dropzone:hover{border-color:var(--accent);background:rgba(255,92,138,.06)}
+.dz-ic{width:54px;height:54px;border-radius:16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--accent-glow)}
+.dz-ic svg{width:26px;height:26px}
+.dropzone b{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em;color:#fff}
+.dropzone span{font-size:13px;color:rgba(255,255,255,.6)}
+.upload-card .fineprint{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45);display:flex;gap:8px;align-items:center;justify-content:center}
+
+/* ---- final cta ---- */
+.final{text-align:center;display:flex;flex-direction:column;align-items:center;gap:22px}
+.final .h2{max-width:20ch}
+@media (max-width:900px){
+  .hero-grid,.cta-grid{grid-template-columns:1fr}
+  .hero-media{order:-1}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-head">
+  <div class="bar">
+    <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+    <nav class="nav">
+      <a href="shop.html">Shop</a>
+      <a href="custom.html">Custom</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#reviews">Reviews</a>
+    </nav>
+    <div class="head-actions">
+      <a class="btn btn--primary btn--sm" href="custom.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+        Make your plushie
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+        <span class="cart-count" data-empty="true">0</span>
+      </a>
+      <button class="icon-btn menu-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="kicker rise">Custom · Hand-sewn · 1-of-1</span>
+      <h1 class="h1 rise">Anyone you love, shrunk into a six-inch huggable best friend.</h1>
+      <p class="lede rise">Upload one good photo. Our makers cut, sew, and stitch a plushie that's unmistakably them — six soft inches of squish, embroidered face included.</p>
+      <div class="hero-cta rise">
+        <a class="btn btn--primary btn--lg ripple" href="custom.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+          Upload a photo
+        </a>
+        <a class="btn btn--ghost btn--lg" href="shop.html">Browse the collection</a>
+      </div>
+      <div class="hero-meta rise">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg> Free proof first</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg> 14-day turnaround</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg> Re-stitch guarantee</span>
+      </div>
+    </div>
+
+    <div class="hero-media rise">
+      <div class="hero-frame">
+        <image-slot id="hero-main" placeholder="Drop a hero plushie photo" fit="cover"></image-slot>
+      </div>
+      <div class="hero-chip-photo">
+        <span class="mono">Your photo</span>
+        <b>→ 6&quot; of joy</b>
+      </div>
+      <div class="hero-badge">
+        <div class="hb-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>
+        </div>
+        <div>
+          <b>4.9 / 5</b>
+          <span>12,400+ plushies &amp; counting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LOGO / TRUST STRIP ============ -->
+<div class="wrap strip">
+  <div class="strip-inner">
+    <span class="mono">As gifted for</span>
+    <span class="mono">Birthdays</span>
+    <span class="mono">Weddings</span>
+    <span class="mono">New babies</span>
+    <span class="mono">Long-distance</span>
+    <span class="mono">Office secret santa</span>
+    <span class="mono">Pet parents</span>
+  </div>
+</div>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker rise">How it works</span>
+      <h2 class="h2 rise">Three steps between a photo and a permanent little hug.</h2>
+    </div>
+    <div class="steps">
+      <div class="step rise">
+        <div class="step-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2.5"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.2-2h5.6L16 6"/></svg>
+        </div>
+        <div class="step-n">Step 01</div>
+        <h3>Send your best angle</h3>
+        <p>One clear, well-lit photo is all it takes. Front-facing wins. We'll tell you if it won't work — before you pay.</p>
+      </div>
+      <div class="step rise">
+        <div class="step-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 7v7l8 4 8-4V7"/><path d="M9 9.5l6 3"/></svg>
+        </div>
+        <div class="step-n">Step 02</div>
+        <h3>We sew &amp; you approve</h3>
+        <p>A real maker patterns, sews, and embroiders your likeness. You get a photo proof to nitpick before anything ships.</p>
+      </div>
+      <div class="step rise">
+        <div class="step-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>
+        </div>
+        <div class="step-n">Step 03</div>
+        <h3>It squishes into your life</h3>
+        <p>Ships in a clear window-box, ready to flop on a bed, shelf, or desk. Soft-stuffed for maximum squeezeability.</p>
+      </div>
+    </div>
+    <div class="how-foot">
+      <a class="btn btn--primary" href="custom.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+        Start with a photo
+      </a>
+      <span class="mono faint">From $36 · ships worldwide</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURED COLLECTION ============ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head" style="flex-direction:row;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px">
+      <div class="stack gap-16">
+        <span class="kicker rise">Ready-to-squish</span>
+        <h2 class="h2 rise">The collection, for when you can't wait to sew.</h2>
+      </div>
+      <a class="btn btn--ghost btn--sm rise" href="shop.html">
+        See all
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+    <div class="pgrid" id="featured"></div>
+  </div>
+</section>
+
+<!-- ============ DARK CTA BAND ============ -->
+<section class="band-dark cta-band">
+  <div class="wrap">
+    <div class="cta-grid">
+      <div class="stack gap-24">
+        <span class="kicker rise">Made for you, literally</span>
+        <h2 class="h2 rise">Drop a photo. We'll handle the stitching.</h2>
+        <p class="lede rise">No 3D scan, no app, no sewing skills required. Just one photo and a few choices — outfit, fabric, expression — and our makers take it from there.</p>
+        <div class="stats" style="margin-top:8px">
+          <div class="stat rise"><span class="num"><em>40k+</em></span><span class="stat-lab">Plushies sewn</span></div>
+          <div class="stat rise"><span class="num">4.9★</span><span class="stat-lab">From 12k reviews</span></div>
+          <div class="stat rise"><span class="num">14<span style="font-size:.5em">days</span></span><span class="stat-lab">Avg. turnaround</span></div>
+        </div>
+      </div>
+      <div class="upload-card rise">
+        <span class="kicker kicker--light">Start here</span>
+        <a class="dropzone" href="custom.html">
+          <div class="dz-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+          </div>
+          <b>Upload a photo</b>
+          <span>Drag &amp; drop or browse — JPG or PNG, one clear face</span>
+        </a>
+        <div class="fineprint">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+          Your photos stay private · used only to sew
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEWS ============ -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker rise">The reviews are in</span>
+      <h2 class="h2 rise">People came for the gift. They stayed for the squish.</h2>
+    </div>
+    <div class="reviews" id="reviews-grid"></div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="tile final" style="padding:clamp(40px,7vw,80px) 24px;border-radius:clamp(24px,4vw,40px)">
+      <span class="kicker rise">Your move</span>
+      <h2 class="h2 rise">Someone in your camera roll deserves a six-inch hug.</h2>
+      <p class="lede rise" style="text-align:center;margin-inline:auto">It takes about two minutes to start. We'll send a free proof before a single stitch is sewn.</p>
+      <div class="hero-cta rise" style="justify-content:center">
+        <a class="btn btn--primary btn--lg ripple" href="custom.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+          Upload a photo
+        </a>
+        <a class="btn btn--ghost btn--lg" href="shop.html">Shop the collection</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand stack gap-16">
+        <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+        <p class="muted" style="color:rgba(255,255,255,.6)">Hand-sewn plushies from a single photo. Made by humans, shipped to squish.</p>
+        <a class="btn btn--primary btn--sm" href="custom.html" style="width:fit-content">Make your plushie</a>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h4>Shop</h4>
+          <a href="shop.html">All plushies</a>
+          <a href="custom.html">Custom order</a>
+          <a href="shop.html">Bestsellers</a>
+          <a href="shop.html">Gift cards</a>
+        </div>
+        <div class="foot-col">
+          <h4>Company</h4>
+          <a href="index.html#how">How it works</a>
+          <a href="index.html#reviews">Reviews</a>
+          <a href="index.html">Our studio</a>
+          <a href="index.html">Careers</a>
+        </div>
+        <div class="foot-col">
+          <h4>Help</h4>
+          <a href="index.html">Photo tips</a>
+          <a href="index.html">Shipping</a>
+          <a href="index.html">Returns</a>
+          <a href="index.html">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 plushlings — every plushie made to be squeezed</span>
+      <span>Made by hand · Shipped worldwide</span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="app.js"></script>
+<script>
+/* featured products */
+(function(){
+  const grid=document.getElementById("featured");
+  if(!grid)return;
+  PRODUCTS.slice(0,4).forEach(p=>{
+    const a=document.createElement("a");
+    a.className="pcard rise";
+    a.href="product.html?id="+p.id;
+    a.innerHTML=`
+      <div class="pcard-media">
+        <image-slot id="${p.slot}" placeholder="Drop product photo"></image-slot>
+        ${p.tag?`<span class="tag">${p.tag}</span>`:""}
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-row"><h3>${p.name}</h3><span class="pcard-price">${money(p.price)}</span></div>
+        <p class="pcard-blurb">${p.blurb}</p>
+        <span class="mono pcard-cat">${p.cat}</span>
+      </div>`;
+    grid.appendChild(a);
+  });
+  /* reviews */
+  const reviews=[
+    { t:"Gave my mom a tiny plush of her late cat. She cried, then hugged it for an hour. The stitched whiskers are perfect.", n:"Marisol P.", w:"Verified · Pet plush", av:"rv-1" },
+    { t:"Ordered the whole sales team as plushies. Morale up, productivity questionable. Worth every penny.", n:"Dev K.", w:"Verified · Office gift", av:"rv-2" },
+    { t:"The proof looked exactly like my daughter. The real one now refuses to nap without the plush one. Cinema.", n:"Anna T.", w:"Verified · Mini-Me", av:"rv-3" },
+  ];
+  const rg=document.getElementById("reviews-grid");
+  reviews.forEach(r=>{
+    const d=document.createElement("div");
+    d.className="review rise";
+    d.innerHTML=`
+      <div class="stars">${'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l2.1 4.3 4.7.7-3.4 3.3.8 4.7L12 13.9 7.8 16l.8-4.7L5.2 8l4.7-.7L12 3z"/></svg>'.repeat(5)}</div>
+      <p>${r.t}</p>
+      <div class="review-by">
+        <div class="review-av"><image-slot id="${r.av}" placeholder=" "></image-slot></div>
+        <div><b>${r.n}</b><span>${r.w}</span></div>
+      </div>`;
+    rg.appendChild(d);
+  });
+  initReveal();
+})();
+</script>
+</body>
+</html>
