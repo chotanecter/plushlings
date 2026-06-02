@@ -138,7 +138,9 @@
 
   /* ---- photo slot fill detection ---- */
   function watchSlot(){
+    // Upload + preview handling now lives in plushie-generate.js.
     const slot=$("#upSlot");
+    if(!slot)return;
     const check=()=>{
       const img=document.querySelector("#custom-photo");
       const filled = !!(img && img.hasAttribute("data-filled"));
