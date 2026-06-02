@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop the collection — plushlings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.shop-head{padding-top:clamp(32px,4vw,52px);padding-bottom:clamp(20px,3vw,28px)}
+.shop-head .h1{font-size:clamp(30px,4.4vw,48px);max-width:14ch}
+.shop-head .lede{margin-top:14px}
+.toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:clamp(22px,3vw,30px)}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.toolbar .count{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.shop-grid-sec{padding-top:clamp(20px,3vw,28px)}
+.empty-note{padding:60px 0;text-align:center;color:var(--ink-faint);font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+/* custom band */
+.custom-band .wrap{position:relative;padding-block:clamp(48px,6vw,80px)}
+.cb-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,4vw,56px);align-items:center}
+.cb-grid .h2{color:#fff;max-width:14ch}
+.cb-art{aspect-ratio:16/10;border-radius:20px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.cb-art image-slot{width:100%;height:100%;box-shadow:none;background:rgba(255,255,255,.05)}
+@media (max-width:880px){.cb-grid{grid-template-columns:1fr}.cb-art{order:-1}}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-head">
+  <div class="bar">
+    <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+    <nav class="nav">
+      <a href="shop.html">Shop</a>
+      <a href="custom.html">Custom</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#reviews">Reviews</a>
+    </nav>
+    <div class="head-actions">
+      <a class="btn btn--primary btn--sm" href="custom.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+        Make your plushie
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+        <span class="cart-count" data-empty="true">0</span>
+      </a>
+      <button class="icon-btn menu-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="shop-head">
+    <div class="wrap">
+      <span class="kicker rise">The collection</span>
+      <h1 class="h1 rise">Ready-to-squish plushies, sewn to order.</h1>
+      <p class="lede rise">Pick a character, swap the face for someone you know, or start from scratch. Every one is still hand-patterned, sewn, and soft-stuffed to six inches.</p>
+      <div class="toolbar rise">
+        <div class="filters" id="filters"></div>
+        <span class="count" id="count"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="shop-grid-sec" style="padding-top:0">
+    <div class="wrap">
+      <div class="pgrid" id="grid"></div>
+      <div class="empty-note" id="empty" style="display:none">No plushies in this aisle — yet.</div>
+    </div>
+  </section>
+
+  <!-- DARK CUSTOM BAND -->
+  <section class="band-dark custom-band">
+    <div class="wrap">
+      <div class="cb-grid">
+        <div class="stack gap-24">
+          <span class="kicker rise">Can't find them?</span>
+          <h2 class="h2 rise">Of course not. They're one of a kind.</h2>
+          <p class="lede rise">Every face in the collection started as someone's photo. Upload yours and we'll sew a plushie that doesn't exist anywhere else.</p>
+          <div class="rise">
+            <a class="btn btn--primary btn--lg ripple" href="custom.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+              Make your own
+            </a>
+          </div>
+        </div>
+        <div class="cb-art rise">
+          <image-slot id="shop-custom-art" placeholder="Drop a custom plushie photo"></image-slot>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand stack gap-16">
+        <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+        <p class="muted" style="color:rgba(255,255,255,.6)">Hand-sewn plushies from a single photo. Made by humans, shipped to squish.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Shop</h4><a href="shop.html">All plushies</a><a href="custom.html">Custom order</a><a href="shop.html">Bestsellers</a></div>
+        <div class="foot-col"><h4>Company</h4><a href="index.html#how">How it works</a><a href="index.html#reviews">Reviews</a><a href="index.html">Our studio</a></div>
+        <div class="foot-col"><h4>Help</h4><a href="index.html">Photo tips</a><a href="index.html">Shipping</a><a href="index.html">Returns</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 plushlings — every plushie made to be squeezed</span>
+      <span>Made by hand · Shipped worldwide</span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="app.js"></script>
+<script>
+(function(){
+  let active="All";
+  const grid=document.getElementById("grid");
+  const filtersEl=document.getElementById("filters");
+  const countEl=document.getElementById("count");
+  const emptyEl=document.getElementById("empty");
+
+  CATS.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(c===active?" is-active":"");
+    b.type="button";
+    b.textContent=c;
+    b.setAttribute("aria-pressed",c===active?"true":"false");
+    b.addEventListener("click",()=>{
+      active=c;
+      [...filtersEl.children].forEach(x=>{ const on=x.textContent===c; x.classList.toggle("is-active",on); x.setAttribute("aria-pressed",on?"true":"false"); });
+      render();
+    });
+    filtersEl.appendChild(b);
+  });
+
+  function render(){
+    const list=active==="All"?PRODUCTS:PRODUCTS.filter(p=>p.cat===active);
+    grid.innerHTML="";
+    list.forEach(p=>{
+      const a=document.createElement("a");
+      a.className="pcard rise";
+      a.href="product.html?id="+p.id;
+      a.innerHTML=`
+        <div class="pcard-media">
+          <image-slot id="${p.slot}" placeholder="Drop product photo"></image-slot>
+          ${p.tag?`<span class="tag">${p.tag}</span>`:""}
+          <button class="pcard-fav" type="button" aria-label="Save" onclick="event.preventDefault();this.classList.toggle('on');this.querySelector('svg').setAttribute('fill',this.classList.contains('on')?'currentColor':'none');">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20S4 14.5 4 9a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5.5-8 11-8 11z"/></svg>
+          </button>
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-row"><h3>${p.name}</h3><span class="pcard-price">${money(p.price)}</span></div>
+          <p class="pcard-blurb">${p.blurb}</p>
+          <span class="mono pcard-cat">${p.cat}</span>
+        </div>`;
+      grid.appendChild(a);
+    });
+    countEl.textContent=list.length+(list.length===1?" style":" styles");
+    emptyEl.style.display=list.length?"none":"block";
+    initReveal();
+  }
+  render();
+})();
+</script>
+</body>
+</html>
