@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make your plushie — plushlings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.custom{padding-top:clamp(28px,4vw,44px);padding-bottom:clamp(48px,7vw,88px)}
+.custom-head{display:flex;flex-direction:column;gap:16px;margin-bottom:clamp(24px,3vw,36px)}
+.custom-head .h1{font-size:clamp(30px,4.4vw,46px);max-width:16ch}
+
+/* progress */
+.progress{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.pstep{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;transition:box-shadow .2s var(--ease),transform .2s var(--ease)}
+.pstep .pn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ink-faint)}
+.pstep .pl{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.pstep.is-active{background:var(--ink)}
+.pstep.is-active .pn{color:var(--accent)}
+.pstep.is-active .pl{color:#fff}
+.pstep.is-done{background:#fff}
+.pstep.is-done .pn{color:var(--accent)}
+.pstep.is-done .pl{color:var(--ink)}
+.pstep .pdot{display:none;width:16px;height:16px;border-radius:999px;background:var(--accent);color:#fff;align-items:center;justify-content:center}
+.pstep.is-done .pdot{display:flex}
+.pstep .pdot svg{width:10px;height:10px}
+
+/* layout */
+.custom-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(24px,3.5vw,44px);align-items:start}
+.custom-main{min-width:0}
+.panel{display:none;flex-direction:column;gap:26px;animation:panelIn .4s var(--ease)}
+.panel.is-active{display:flex}
+@keyframes panelIn{from{transform:translateY(10px)}to{transform:none}}
+.fieldset{display:flex;flex-direction:column;gap:14px}
+.fieldset > .label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);display:flex;align-items:center;gap:8px}
+.fieldset > .label .opt-delta{margin-left:auto;text-transform:none}
+
+/* upload dropzone */
+.up{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:start}
+.up-slot{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line)}
+.up-slot image-slot{width:100%;height:100%;box-shadow:none;background:transparent}
+.up-slot image-slot::part(empty){opacity:0}
+.up-hint{pointer-events:none;position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;z-index:2}
+.up-hint .dzic{width:54px;height:54px;border-radius:16px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px var(--accent-glow)}
+.up-hint .dzic svg{width:26px;height:26px}
+.up-hint b{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em}
+.up-hint span{font-size:13px;color:var(--ink-soft)}
+.up-slot.filled .up-hint{display:none}
+.tips{display:flex;flex-direction:column;gap:12px}
+.tip{display:flex;gap:12px;align-items:flex-start}
+.tip .ti{width:30px;height:30px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);color:var(--accent)}
+.tip .ti svg{width:16px;height:16px}
+.tip b{font-size:14px;font-weight:700;display:block;letter-spacing:-.01em}
+.tip span{font-size:13px;color:var(--ink-soft)}
+
+/* nav buttons */
+.panel-nav{display:flex;align-items:center;gap:12px;margin-top:6px}
+.panel-nav .spacer{flex:1}
+
+/* summary side */
+.summary{position:sticky;top:90px;border-radius:22px;background:#fff;box-shadow:inset 0 0 0 1px var(--line),var(--shadow-sm);overflow:hidden}
+.sum-prev{aspect-ratio:16/11;background:var(--surface);position:relative;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line)}
+.sum-prev image-slot{width:100%;height:100%;box-shadow:none;background:transparent}
+.sum-prev .ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink-faint)}
+.sum-prev .ph svg{width:30px;height:30px}
+.sum-prev .ph .mono{color:var(--ink-faint)}
+.sum-prev.filled .ph{display:none}
+.sum-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+.sum-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.sum-title b{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em}
+.sum-list{display:flex;flex-direction:column;gap:9px}
+.sum-row{display:flex;justify-content:space-between;gap:16px;font-size:13px;align-items:baseline}
+.sum-row .k{color:var(--ink-soft);font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding-top:1px;flex:none;white-space:nowrap}
+.sum-row .v{font-weight:600;text-align:right;flex:1;min-width:0}
+.sum-total{display:flex;align-items:baseline;justify-content:space-between;padding-top:14px;border-top:1px solid var(--line)}
+.sum-total .tl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint)}
+.sum-total .tv{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:-.03em}
+.sum-note{font-size:11.5px;color:var(--ink-faint);display:flex;gap:7px;align-items:center;line-height:1.4}
+.sum-note svg{width:13px;height:13px;flex:none;color:var(--accent)}
+
+/* engraving input row */
+.inline-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* success */
+.success{display:none;flex-direction:column;align-items:center;text-align:center;gap:20px;padding:clamp(36px,6vw,64px) 24px;border-radius:24px;background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.success.is-active{display:flex}
+.success .sic{width:72px;height:72px;border-radius:999px;background:var(--accent-tint);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.success .sic svg{width:34px;height:34px}
+.success .h2{max-width:18ch}
+
+@media (max-width:920px){
+  .custom-grid{grid-template-columns:1fr}
+  .summary{position:static}
+  .up{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .inline-2,.optgrid--3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-head">
+  <div class="bar">
+    <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+    <nav class="nav">
+      <a href="shop.html">Shop</a>
+      <a href="custom.html">Custom</a>
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#reviews">Reviews</a>
+    </nav>
+    <div class="head-actions">
+      <a class="btn btn--primary btn--sm" href="custom.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg>
+        Make your plushie
+      </a>
+      <a class="icon-btn" href="cart.html" aria-label="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+        <span class="cart-count" data-empty="true">0</span>
+      </a>
+      <button class="icon-btn menu-btn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="custom">
+  <div class="wrap">
+    <div class="custom-head">
+      <span class="kicker rise">Build your plushie</span>
+      <h1 class="h1 rise">A photo, a few choices, and a lot of squish. Let's go.</h1>
+      <div class="progress rise" id="progress">
+        <div class="pstep is-active" data-step="0"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">01</span><span class="pl">Photo</span></div>
+        <div class="pstep" data-step="1"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">02</span><span class="pl">Build</span></div>
+        <div class="pstep" data-step="2"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">03</span><span class="pl">Details</span></div>
+        <div class="pstep" data-step="3"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">04</span><span class="pl">Review</span></div>
+      </div>
+    </div>
+
+    <div class="custom-grid">
+      <div class="custom-main">
+
+        <!-- STEP 1: PHOTO -->
+        <div class="panel is-active" data-panel="0">
+          <div class="fieldset">
+            <div class="label">Upload a photo</div>
+            <div class="up">
+              <div class="up-slot" id="upSlot">
+                <image-slot id="custom-photo" placeholder=" " fit="cover"></image-slot>
+                <div class="up-hint">
+                  <div class="dzic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M4 18v1a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-1"/></svg></div>
+                  <b>Drop a photo here</b>
+                  <span>or click to browse — JPG / PNG</span>
+                </div>
+              </div>
+              <div class="tips">
+                <span class="kicker">For the best likeness</span>
+                <div class="tip"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></span><div><b>Face the camera</b><span>Front-on, eyes visible, no big sunglasses.</span></div></div>
+                <div class="tip"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></span><div><b>Good light</b><span>Daylight beats flash. Avoid heavy shadows.</span></div></div>
+                <div class="tip"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-4 4 3 3-2 6 4"/></svg></span><div><b>Sharp &amp; close</b><span>Fill the frame. Blurry photos mean a blurry you.</span></div></div>
+                <p class="sum-note" style="margin-top:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Your photo is private — we use it only to sew, then delete it.</p>
+              </div>
+            </div>
+          </div>
+          <div class="panel-nav">
+            <span class="spacer"></span>
+            <button class="btn btn--primary" data-next>Continue to build
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: BUILD -->
+        <div class="panel" data-panel="1">
+          <div class="fieldset">
+            <div class="label">How many?</div>
+            <div class="optgrid optgrid--3" data-group="people"></div>
+          </div>
+          <div class="fieldset">
+            <div class="label">Fabric <span class="opt-delta" style="font-family:var(--mono);color:var(--ink-faint)">All 6&quot; · pocket plush</span></div>
+            <div class="optgrid optgrid--3" data-group="size"></div>
+          </div>
+          <div class="fieldset">
+            <div class="label">Outfit &amp; style</div>
+            <div class="optgrid optgrid--3" data-group="style"></div>
+          </div>
+          <div class="fieldset">
+            <div class="label">Expression</div>
+            <div class="optgrid optgrid--auto" data-group="pose"></div>
+          </div>
+          <div class="fieldset">
+            <div class="label">Accessory</div>
+            <div class="optgrid optgrid--auto" data-group="base"></div>
+          </div>
+          <div class="panel-nav">
+            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
+            <span class="spacer"></span>
+            <button class="btn btn--primary" data-next>Add the details<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- STEP 3: DETAILS -->
+        <div class="panel" data-panel="2">
+          <div class="fieldset">
+            <div class="label">Finishing touches</div>
+            <div class="optgrid optgrid--3" data-group="addons" data-multi="1"></div>
+          </div>
+          <div class="inline-2">
+            <div class="field">
+              <label for="engraveText">Embroidery / name tag</label>
+              <input class="input" id="engraveText" placeholder="e.g. World's Okayest Boss" maxlength="22">
+            </div>
+            <div class="field">
+              <label for="occasion">Occasion</label>
+              <select class="input select" id="occasion">
+                <option value="">No occasion</option>
+                <option>Birthday</option><option>Wedding / Anniversary</option><option>New baby</option>
+                <option>Office gift</option><option>Pet portrait</option><option>Just because</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="notes">Notes for the maker</label>
+            <textarea class="input" id="notes" rows="3" placeholder="Tell us anything — favorite color, that one cowlick, the vibe."></textarea>
+          </div>
+          <div class="panel-nav">
+            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
+            <span class="spacer"></span>
+            <button class="btn btn--primary" data-next>Review my plushie<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- STEP 4: REVIEW -->
+        <div class="panel" data-panel="3">
+          <div class="fieldset">
+            <span class="kicker">Final look</span>
+            <h2 class="h3">Here's your one-of-a-kind, before it's ever sewn.</h2>
+            <p class="muted" style="font-size:14px">We'll email a photo proof within 48 hours. Nothing gets sewn until you say it's perfect.</p>
+          </div>
+          <div class="tile" style="padding:22px;border-radius:18px">
+            <div class="sum-list" id="reviewList"></div>
+          </div>
+          <div class="panel-nav">
+            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
+            <span class="spacer"></span>
+            <button class="btn btn--primary btn--lg" id="addCustom">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h2.2l2.1 12.2a1.6 1.6 0 0 0 1.6 1.3h8.8a1.6 1.6 0 0 0 1.6-1.2L21 7H5.5"/></svg>
+              Add to cart · <span id="addPrice">$36</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="success" id="success">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></div>
+          <span class="kicker">In the cart</span>
+          <h2 class="h2">Your plushie is queued for greatness.</h2>
+          <p class="lede" style="text-align:center;margin-inline:auto">We'll start on a free photo proof. Check out when you're ready, or build one for someone else.</p>
+          <div class="hero-cta" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <a class="btn btn--primary btn--lg" href="cart.html">Go to cart<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <button class="btn btn--ghost btn--lg" id="makeAnother">Build another</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SUMMARY SIDE -->
+      <aside class="summary rise" id="summaryCard">
+        <div class="sum-prev" id="sumPrev">
+          <div class="ph">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4.2"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
+            <span class="mono">Your plushie</span>
+          </div>
+        </div>
+        <div class="sum-body">
+          <div class="sum-title">
+            <b>Custom plushie</b>
+            <span class="tag">1-of-1</span>
+          </div>
+          <div class="sum-list" id="sumList"></div>
+          <div class="sum-total">
+            <span class="tl">Total</span>
+            <span class="tv" id="sumTotal">$36</span>
+          </div>
+          <p class="sum-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Free photo proof before we sew. Free re-do if it's not them.</p>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand stack gap-16">
+        <a class="brand" href="index.html">plushlings<span class="dot"></span></a>
+        <p class="muted" style="color:rgba(255,255,255,.6)">Hand-sewn plushies from a single photo. Made by humans, shipped to squish.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h4>Shop</h4><a href="shop.html">All plushies</a><a href="custom.html">Custom order</a><a href="shop.html">Bestsellers</a></div>
+        <div class="foot-col"><h4>Company</h4><a href="index.html#how">How it works</a><a href="index.html#reviews">Reviews</a><a href="index.html">Our studio</a></div>
+        <div class="foot-col"><h4>Help</h4><a href="index.html">Photo tips</a><a href="index.html">Shipping</a><a href="index.html">Returns</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 plushlings — every plushie made to be squeezed</span>
+      <span>Made by hand · Shipped worldwide</span>
+    </div>
+  </div>
+</footer>
+
+<script src="image-slot.js"></script>
+<script src="app.js"></script>
+<script src="custom.js"></script>
+</body>
+</html>
