@@ -1,64 +1,68 @@
 /* =========================================================================
    custom.js — plush keychain builder (plushlings)
-   Two steps: 01 Photo (Gemini preview) → 02 Review (order quantity).
-   Pricing: 1 piece = $100 sample fee; bulk = $4.50 / piece (default 500).
+   Three steps: 01 Upload → 02 Preview → 03 Review (quantity + volume pricing).
+   Pricing tiers (per unit):
+     1–100 = $200 · 101–500 = $4.50 · 501–1,000 = $4.00
+     1,001–10,000 = $3.50 · 10,001+ = $3.00
    ========================================================================= */
 (function(){
-  const UNIT=4.5;          // per-piece bulk price
-  const SAMPLE=100;        // flat fee for a single sample
-  const QTY_OPTIONS=[
-    {qty:1,    name:"1 — Sample",    sub:"Quality check",  sample:true},
-    {qty:250,  name:"250 pieces",   sub:"$4.50 / piece"},
-    {qty:500,  name:"500 pieces",   sub:"$4.50 / piece",  popular:true},
-    {qty:1000, name:"1,000 pieces", sub:"$4.50 / piece"},
-    {qty:2500, name:"2,500 pieces", sub:"$4.50 / piece"},
+  const MAXQ=20000;
+  // display tiers (ranges shown in the table; price is per-unit)
+  const TIERS=[
+    {label:"1–100 units",        lo:1,     hi:100,      price:200},
+    {label:"101–500 units",      lo:101,   hi:500,      price:4.5},
+    {label:"501–1,000 units",    lo:501,   hi:1000,     price:4.0},
+    {label:"1,001–10,000 units", lo:1001,  hi:10000,    price:3.5},
+    {label:"10,001+ units",      lo:10001, hi:Infinity, price:3.0},
   ];
 
-  const state={ qty:500 };   // default 500 pieces
+  const state={ qty:500 };
   let step=0;
-  const TOTAL=2;
+  const TOTAL=3;
 
   const $=s=>document.querySelector(s);
   const $$=s=>[...document.querySelectorAll(s)];
 
   const fmt=n=>"$"+Number(n).toLocaleString("en-US");
-  function price(){ return state.qty===1 ? SAMPLE : state.qty*UNIT; }
-  function unitLabel(){ return state.qty===1 ? "Sample fee" : "$4.50 / piece"; }
-  function qtyLabel(){ return state.qty===1 ? "1 piece (sample)" : state.qty.toLocaleString("en-US")+" pieces"; }
+  const unitFmt=p=> p<10 ? "$"+p.toFixed(2) : "$"+p;
+  function tierFor(q){ return TIERS.find(t=>q>=t.lo&&q<=t.hi) || TIERS[TIERS.length-1]; }
+  function unitPrice(q){ return tierFor(q).price; }
+  function total(){ return state.qty*unitPrice(state.qty); }
 
-  /* ---- quantity tiles ---- */
-  function renderQty(){
-    const grid=$("#qtyGrid");
-    if(!grid)return;
-    grid.innerHTML="";
-    QTY_OPTIONS.forEach(o=>{
-      const sel=state.qty===o.qty;
-      const total=o.qty===1?SAMPLE:o.qty*UNIT;
-      const b=document.createElement("button");
-      b.className="opt"; b.type="button";
-      b.setAttribute("aria-pressed",sel?"true":"false");
-      b.innerHTML=`
-        <span class="opt-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span>
-        <span class="opt-name">${o.name}${o.popular?' <span class="tag" style="margin-left:4px">Popular</span>':''}</span>
-        <span class="opt-sub">${o.sub}</span>
-        <span class="opt-delta">${o.sample?"Sample fee · "+fmt(total):fmt(total)}</span>`;
-      b.addEventListener("click",()=>{ state.qty=o.qty; renderQty(); renderSummary(); });
-      grid.appendChild(b);
-    });
+  /* ---- tier reference table ---- */
+  function renderTierTable(){
+    const el=$("#tierTable");
+    if(!el)return;
+    const active=tierFor(state.qty);
+    el.innerHTML=TIERS.map(t=>`
+      <div class="tier-row${t===active?' is-active':''}">
+        <span>${t.label}</span>
+        <span class="tier-price">${unitFmt(t.price)} / unit</span>
+      </div>`).join("");
   }
 
   /* ---- sticky summary ---- */
   function renderSummary(){
+    const u=unitPrice(state.qty);
     const rows=[
       ["Item","Plush keychain"],
-      ["Quantity",qtyLabel()],
-      ["Price",unitLabel()],
+      ["Quantity",state.qty.toLocaleString("en-US")+" units"],
+      ["Unit price",unitFmt(u)],
     ];
     const list=$("#sumList");
     if(list) list.innerHTML=rows.map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
-    const t=fmt(price());
+    const t=fmt(total());
     if($("#sumTotal")) $("#sumTotal").textContent=t;
     if($("#addPrice")) $("#addPrice").textContent=t;
+    if($("#unitLabel")) $("#unitLabel").textContent=unitFmt(u)+" / unit";
+  }
+
+  function clampQ(v){ v=Math.round(+v||1); return Math.max(1,Math.min(MAXQ,v)); }
+  function setQty(v,from){
+    state.qty=clampQ(v);
+    if(from!=="input" && $("#qtyInput")) $("#qtyInput").value=state.qty;
+    if(from!=="slider" && $("#qtySlider")) $("#qtySlider").value=state.qty;
+    renderTierTable(); renderSummary();
   }
 
   /* ---- steps ---- */
@@ -74,26 +78,47 @@
   }
 
   document.addEventListener("DOMContentLoaded",()=>{
-    renderQty();
+    setQty(state.qty);
+    renderTierTable();
     renderSummary();
 
-    $$("[data-next]").forEach(b=>b.addEventListener("click",()=>go(step+1)));
+    // quantity controls
+    const input=$("#qtyInput"), slider=$("#qtySlider");
+    if(input){
+      input.addEventListener("input",()=>setQty(input.value,"input"));
+      input.addEventListener("blur",()=>{ input.value=state.qty; });
+    }
+    if(slider) slider.addEventListener("input",()=>setQty(slider.value,"slider"));
+
+    // step nav
+    $$("[data-next]").forEach(b=>b.addEventListener("click",()=>{ if(!b.disabled) go(step+1); }));
     $$("[data-back]").forEach(b=>b.addEventListener("click",()=>go(step-1)));
     $$("#progress .pstep").forEach(s=>s.addEventListener("click",()=>{ if(+s.dataset.step<=step) go(+s.dataset.step); }));
 
+    // when a preview is generated: enable "continue", mirror image into the Preview step
+    window.addEventListener("plush:generated",(e)=>{
+      const btn=$("#toPreview"); if(btn) btn.disabled=false;
+      const img=$("#previewImg"), ph=$("#previewPh");
+      if(img && e.detail && e.detail.image){ img.src=e.detail.image; img.style.display="block"; }
+      if(ph) ph.style.display="none";
+    });
+    // regenerate from the Preview step
+    const rb=$("#regenBtn2");
+    if(rb) rb.addEventListener("click",()=>{ if(typeof window.plushRegen==="function") window.plushRegen(); });
+
+    // add to cart
     $("#addCustom").addEventListener("click",()=>{
-      const variant = state.qty===1
-        ? "1 piece · Sample fee"
-        : state.qty.toLocaleString("en-US")+" pieces · $4.50/ea";
+      const u=unitPrice(state.qty);
+      const variant=state.qty.toLocaleString("en-US")+" units · "+unitFmt(u)+"/ea";
       addToCart({
         id:"custom-"+Date.now(),
         name:"Custom plush keychain",
         variant:variant,
-        price:price(),   // total order price as a single line
+        price:total(),
         qty:1,
         custom:true,
         slot:"custom-photo",
-        meta:{...state}
+        meta:{qty:state.qty, unit:u}
       });
       $$("[data-panel]").forEach(p=>p.classList.remove("is-active"));
       $("#success").classList.add("is-active");

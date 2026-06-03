@@ -69,6 +69,7 @@
         if (els.src && els.out) els.src.style.display = 'none';
         setStatus('idle', '');
         if (els.regen) els.regen.style.display = 'inline-flex';
+        if (els.exposeEvent) window.dispatchEvent(new CustomEvent('plush:generated', { detail: { image: img } }));
         if (typeof window.toast === 'function') window.toast('Plush keychain preview ready!');
       } catch (e) {
         setStatus('error', (e.message || 'Generation failed.') + ' <button class="link-btn" data-retry>Retry</button>');
@@ -83,6 +84,7 @@
     ['dragleave', 'drop'].forEach(ev => els.zone.addEventListener(ev, e => { e.preventDefault(); els.zone.classList.remove('drag'); }));
     els.zone.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) run(f); });
     if (els.regen) els.regen.addEventListener('click', e => { e.stopPropagation(); if (lastFile) run(lastFile); });
+    if (els.exposeRegen) window.plushRegen = () => { if (lastFile) run(lastFile); };
   }
 
   const $ = (id) => document.getElementById(id);
@@ -94,6 +96,7 @@
       src: $('srcPreview'), out: $('genPlushImg'),
       hint: $('plushHint'), placeholder: $('genPlaceholder'),
       status: $('genStatus'), regen: $('regenBtn'),
+      exposeEvent: true, exposeRegen: true,
     });
     // Home hero: drop a photo, the generated plush fills the hero frame.
     initMount({

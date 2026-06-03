@@ -100,6 +100,26 @@
   .inline-2,.optgrid--3{grid-template-columns:1fr}
 }
 
+/* ---- preview step ---- */
+.preview-frame{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:flex;align-items:center;justify-content:center}
+.preview-frame img{width:100%;height:100%;object-fit:contain;background:#fff}
+.preview-ph{color:var(--ink-faint);text-align:center;padding:20px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn[disabled]:hover{transform:none}
+
+/* ---- quantity slider + input ---- */
+.qty-row{display:flex;align-items:center;gap:10px}
+.qty-input{max-width:160px;font-family:var(--display);font-weight:700;font-size:18px;font-variant-numeric:tabular-nums}
+.qty-units{color:var(--ink-faint)}
+.qty-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);outline:none;margin:6px 0}
+.qty-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 4px 12px var(--accent-glow);cursor:pointer;border:3px solid #fff}
+.qty-slider::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--accent);box-shadow:0 4px 12px var(--accent-glow);cursor:pointer;border:3px solid #fff}
+.tier-table{display:flex;flex-direction:column;gap:6px;margin-top:8px;background:var(--surface);border-radius:12px;padding:14px 16px;box-shadow:inset 0 0 0 1px var(--line)}
+.tier-row{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-soft);padding:3px 0}
+.tier-row.is-active{color:var(--ink);font-weight:700}
+.tier-row.is-active .tier-price{color:var(--accent)}
+.tier-row .tier-price{font-family:var(--mono);font-weight:600}
+
 /* ---- Gemini plushie generator ---- */
 #plushUpload{cursor:pointer}
 #plushUpload.drag{box-shadow:inset 0 0 0 2px var(--accent);background:var(--accent-tint)}
@@ -145,8 +165,9 @@
       <span class="kicker rise">Build your plushie</span>
       <h1 class="h1 rise">A photo, a few choices, and a lot of squish. Let's go.</h1>
       <div class="progress rise" id="progress">
-        <div class="pstep is-active" data-step="0"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">01</span><span class="pl">Photo</span></div>
-        <div class="pstep" data-step="1"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">02</span><span class="pl">Review</span></div>
+        <div class="pstep is-active" data-step="0"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">01</span><span class="pl">Upload</span></div>
+        <div class="pstep" data-step="1"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">02</span><span class="pl">Preview</span></div>
+        <div class="pstep" data-step="2"><span class="pdot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4L19 6"/></svg></span><span class="pn">03</span><span class="pl">Review</span></div>
       </div>
     </div>
 
@@ -178,22 +199,46 @@
           </div>
           <div class="panel-nav">
             <span class="spacer"></span>
-            <button class="btn btn--primary" data-next>Continue to review
+            <button class="btn btn--primary" id="toPreview" data-next disabled>Continue to preview
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
           </div>
         </div>
 
-        <!-- STEP 2: REVIEW + ORDER QUANTITY -->
+        <!-- STEP 2: PREVIEW -->
         <div class="panel" data-panel="1">
+          <div class="fieldset">
+            <span class="kicker">Your preview</span>
+            <h2 class="h3">Here's your plush keychain.</h2>
+            <p class="muted" style="font-size:14px">Generated from your photo on a clean white background. Love it? Continue to pricing. Want a different take? Regenerate.</p>
+          </div>
+          <div class="preview-frame">
+            <img id="previewImg" alt="Your plush keychain preview" style="display:none">
+            <div class="preview-ph" id="previewPh"><span class="mono">No preview yet — upload a photo in step 1</span></div>
+          </div>
+          <div class="panel-nav">
+            <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
+            <button class="btn btn--ghost btn--sm" id="regenBtn2" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9a8.5 8.5 0 1 1 .5 6"/><path d="M3 4v5h5"/></svg>Regenerate</button>
+            <span class="spacer"></span>
+            <button class="btn btn--primary" data-next>Continue to pricing<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <!-- STEP 3: REVIEW + ORDER QUANTITY -->
+        <div class="panel" data-panel="2">
           <div class="fieldset">
             <span class="kicker">Choose your order</span>
             <h2 class="h3">How many plush keychains do you need?</h2>
-            <p class="muted" style="font-size:14px">Order a single sample to check quality, or go to production at bulk pricing. We'll email a photo proof before anything is sewn.</p>
+            <p class="muted" style="font-size:14px">Drag the slider or type an exact quantity. Your per-unit price drops as volume goes up. We'll email a photo proof before anything is sewn.</p>
           </div>
           <div class="fieldset">
-            <div class="label">Order quantity</div>
-            <div class="optgrid optgrid--3" id="qtyGrid"></div>
+            <div class="label">Order quantity <span class="opt-delta" id="unitLabel" style="margin-left:auto;text-transform:none;font-family:var(--mono);color:var(--accent)">$4.50 / unit</span></div>
+            <div class="qty-row">
+              <input type="number" id="qtyInput" min="1" max="20000" value="500" class="input qty-input">
+              <span class="qty-units mono">units</span>
+            </div>
+            <input type="range" id="qtySlider" min="1" max="20000" step="1" value="500" class="qty-slider">
+            <div class="tier-table" id="tierTable"></div>
           </div>
           <div class="panel-nav">
             <button class="btn btn--ghost" data-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back</button>
