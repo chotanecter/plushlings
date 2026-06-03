@@ -95,12 +95,16 @@
     $$("[data-back]").forEach(b=>b.addEventListener("click",()=>go(step-1)));
     $$("#progress .pstep").forEach(s=>s.addEventListener("click",()=>{ if(+s.dataset.step<=step) go(+s.dataset.step); }));
 
-    // when a preview is generated: enable "continue", mirror image into the Preview step
+    // when a preview is generated: fill the Preview + Review images, then jump to Preview
     window.addEventListener("plush:generated",(e)=>{
+      const src=e.detail && e.detail.image;
       const btn=$("#toPreview"); if(btn) btn.disabled=false;
-      const img=$("#previewImg"), ph=$("#previewPh");
-      if(img && e.detail && e.detail.image){ img.src=e.detail.image; img.style.display="block"; }
-      if(ph) ph.style.display="none";
+      [["#previewImg","#previewPh"],["#reviewImg","#reviewPh"]].forEach(([imgId,phId])=>{
+        const img=$(imgId), ph=$(phId);
+        if(img && src){ img.src=src; img.style.display="block"; }
+        if(ph) ph.style.display="none";
+      });
+      if(step===0) go(1);  // auto-advance from Upload → Preview
     });
     // regenerate from the Preview step
     const rb=$("#regenBtn2");

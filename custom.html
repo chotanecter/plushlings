@@ -28,9 +28,9 @@
 .pstep.is-done .pdot{display:flex}
 .pstep .pdot svg{width:10px;height:10px}
 
-/* layout */
-.custom-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(24px,3.5vw,44px);align-items:start}
-.custom-main{min-width:0}
+/* layout — single column (no side summary) */
+.custom-grid{display:block}
+.custom-main{min-width:0;max-width:640px;margin-inline:auto}
 .panel{display:none;flex-direction:column;gap:26px;animation:panelIn .4s var(--ease)}
 .panel.is-active{display:flex}
 @keyframes panelIn{from{transform:translateY(10px)}to{transform:none}}
@@ -187,6 +187,7 @@
                   <b>Drop a photo here</b>
                   <span>or click to browse — we'll stitch up a preview</span>
                 </div>
+                <div id="genStatus" class="gen-status" style="display:none"></div>
               </div>
               <div class="tips">
                 <span class="kicker">For the best likeness</span>
@@ -226,6 +227,10 @@
 
         <!-- STEP 3: REVIEW + ORDER QUANTITY -->
         <div class="panel" data-panel="2">
+          <div class="preview-frame" style="aspect-ratio:16/10">
+            <img id="reviewImg" alt="Your plush keychain" style="display:none">
+            <div class="preview-ph" id="reviewPh"><span class="mono">Your plush keychain</span></div>
+          </div>
           <div class="fieldset">
             <span class="kicker">Choose your order</span>
             <h2 class="h3">How many plush keychains do you need?</h2>
@@ -263,35 +268,6 @@
         </div>
 
       </div>
-
-      <!-- SUMMARY SIDE -->
-      <aside class="summary rise" id="summaryCard">
-        <div class="sum-prev" id="sumPrev">
-          <img id="genPlushImg" alt="Your custom plushie preview" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff">
-          <div class="ph" id="genPlaceholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4.2"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
-            <span class="mono">Your plushie preview</span>
-            <span class="mono" style="font-size:9px;color:var(--ink-faint);text-transform:none;letter-spacing:0">Upload a photo to generate</span>
-          </div>
-          <div id="genStatus" class="gen-status" style="display:none"></div>
-          <button id="regenBtn" class="btn btn--ghost btn--sm" type="button" style="display:none;position:absolute;bottom:10px;right:10px;height:34px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 9a8.5 8.5 0 1 1 .5 6"/><path d="M3 4v5h5"/></svg>
-            Regenerate
-          </button>
-        </div>
-        <div class="sum-body">
-          <div class="sum-title">
-            <b>Custom plush keychain</b>
-            <span class="tag">Custom</span>
-          </div>
-          <div class="sum-list" id="sumList"></div>
-          <div class="sum-total">
-            <span class="tl">Total</span>
-            <span class="tv" id="sumTotal">$2,250</span>
-          </div>
-          <p class="sum-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>Free photo proof before we sew. Free re-do if it's not them.</p>
-        </div>
-      </aside>
 
     </div>
   </div>

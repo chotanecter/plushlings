@@ -51,7 +51,7 @@
 
     async function run(file) {
       lastFile = file;
-      if (els.src) { els.src.src = URL.createObjectURL(file); els.src.style.display = els.out ? 'none' : 'block'; }
+      if (els.src) { els.src.src = URL.createObjectURL(file); els.src.style.display = 'block'; }
       if (els.hint) els.hint.style.display = 'none';
       if (els.out) els.out.style.display = 'none';
       if (els.placeholder) els.placeholder.style.display = 'none';
@@ -93,9 +93,9 @@
     // Custom builder: upload on the left, generated plush in the summary preview.
     initMount({
       zone: $('plushUpload'), input: $('plushFile'),
-      src: $('srcPreview'), out: $('genPlushImg'),
-      hint: $('plushHint'), placeholder: $('genPlaceholder'),
-      status: $('genStatus'), regen: $('regenBtn'),
+      src: $('srcPreview'), out: $('previewImg'),
+      hint: $('plushHint'), placeholder: null,
+      status: $('genStatus'), regen: null,
       exposeEvent: true, exposeRegen: true,
     });
     // Home hero: drop a photo, the generated plush fills the hero frame.
