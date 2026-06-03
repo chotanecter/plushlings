@@ -9,7 +9,7 @@
   const MAXQ=20000;
   // display tiers (ranges shown in the table; price is per-unit)
   const TIERS=[
-    {label:"1–100 units",        lo:1,     hi:100,      price:200},
+    {label:"3 units",            lo:1,     hi:100,      price:200, sample:true},
     {label:"101–500 units",      lo:101,   hi:500,      price:4.5},
     {label:"501–1,000 units",    lo:501,   hi:1000,     price:4.0},
     {label:"1,001–10,000 units", lo:1001,  hi:10000,    price:3.5},
@@ -37,24 +37,25 @@
     el.innerHTML=TIERS.map(t=>`
       <div class="tier-row${t===active?' is-active':''}">
         <span>${t.label}</span>
-        <span class="tier-price">${unitFmt(t.price)} / unit</span>
+        <span class="tier-price">${t.sample ? "Samples" : unitFmt(t.price)+" / unit"}</span>
       </div>`).join("");
   }
 
   /* ---- sticky summary ---- */
+  function unitText(q){ return tierFor(q).sample ? "Samples" : unitFmt(unitPrice(q))+" / unit"; }
   function renderSummary(){
     const u=unitPrice(state.qty);
     const rows=[
       ["Item","Plush keychain"],
       ["Quantity",state.qty.toLocaleString("en-US")+" units"],
-      ["Unit price",unitFmt(u)],
+      ["Unit price",tierFor(state.qty).sample ? "Samples" : unitFmt(u)],
     ];
     const list=$("#sumList");
     if(list) list.innerHTML=rows.map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join("");
     const t=fmt(total());
     if($("#sumTotal")) $("#sumTotal").textContent=t;
     if($("#addPrice")) $("#addPrice").textContent=t;
-    if($("#unitLabel")) $("#unitLabel").textContent=unitFmt(u)+" / unit";
+    if($("#unitLabel")) $("#unitLabel").textContent=unitText(state.qty);
   }
 
   function clampQ(v){ v=Math.round(+v||1); return Math.max(1,Math.min(MAXQ,v)); }
